@@ -4,7 +4,7 @@ public class javaData {
 		System.out.println(name);
 		int age = 19;
 		System.out.println(age);
-		float deci = 71.9;
+		double deci = 71.9;
 		System.out.println(deci);
 	}
 }
