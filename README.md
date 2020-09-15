@@ -1,4 +1,7 @@
-# IT114
-## Jibran Absarulislam
+# Git Started Assignment
 
-my first file 
+## Jibran Absarulislam Sept 10, 2020
+
+Add, commit, push, pull, .gitignore
+
+*Remote change for pull*

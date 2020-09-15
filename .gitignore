@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Java related
 target/**
 *.jar
@@ -25,3 +26,6 @@ local.properties
 
 *.launch
 
+=======
+pw.txt
+>>>>>>> 59637b67c3fe1c9f0cc6e96b2b00045560e8ae91
