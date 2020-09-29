@@ -124,6 +124,7 @@ public class NumberGuesserHW {
 				if (_strikes > 0) {
 					strikes = _strikes;
 				} else {
+					strikes = 0;
 					break;
 				}
 				// arr.add(reader.nextInt());
