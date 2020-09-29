@@ -12,6 +12,7 @@ public class NumberGuesserHW {
 	private int number = 0;
 	private boolean isRunning = false;
 	final String saveFile = "numberGuesserSave.txt";
+//	private static List<Integer> arr;
 
 	/***
 	 * Gets a random number between 1 and level.
@@ -19,6 +20,10 @@ public class NumberGuesserHW {
 	 * @param level (level to use as upper bounds)
 	 * @return number between bounds
 	 */
+	// public static List<Integer> getArr() {
+	// return arr;
+	// }
+
 	public static int getNumber(int level) {
 		int range = 9 + ((level - 1) * 5);
 		System.out.println("I picked a random number between 1-" + (range + 1) + ", let's see if you can guess.");
@@ -85,12 +90,18 @@ public class NumberGuesserHW {
 			System.out.println("You didn't enter a number, please try again");
 
 		}
+		// arr.add(guess);
 		return guess;
 	}
 
 	private void saveLevel() {
 		try (FileWriter fw = new FileWriter(saveFile)) {
 			fw.write("" + level);// here we need to convert it to a String to record correctly
+			fw.write("\n" + strikes);
+			// for (int i : arr) {
+			// fw.write("\n" + i);
+			// }
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -103,12 +114,19 @@ public class NumberGuesserHW {
 			return false;
 		}
 		try (Scanner reader = new Scanner(file)) {
+			// List<Integer> _arr;
 			while (reader.hasNextLine()) {
 				int _level = reader.nextInt();
-				if (_level > 1) {
+				if (_level > 1)
 					level = _level;
+				// break;
+				int _strikes = reader.nextInt();
+				if (_strikes > 0) {
+					strikes = _strikes;
+				} else {
 					break;
 				}
+				// arr.add(reader.nextInt());
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -126,7 +144,8 @@ public class NumberGuesserHW {
 			System.out.println("I'll ask you to guess a number between a range, and you'll have " + maxStrikes
 					+ " attempts to guess.");
 			if (loadLevel()) {
-				System.out.println("Successfully loaded level " + level + " let's continue then");
+				System.out.println("Successfully loaded level " + level + " let's continue then" + " (" + (5 - strikes)
+						+ " attempts remaining)");
 			}
 			number = getNumber(level);
 			isRunning = true;
