@@ -8,9 +8,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,7 +26,6 @@ public enum SocketClient {
 	private static ObjectOutputStream out;
 	private final static Logger log = Logger.getLogger(SocketClient.class.getName());
 	private static List<Event> events = new ArrayList<Event>();// change from event to list<event>
-	public Queue<String> messages = new LinkedList<String>();
 
 	private Payload buildMessage(String message) {
 		Payload payload = new Payload();
@@ -52,6 +49,15 @@ public enum SocketClient {
 	private void sendPayload(Payload p) {
 		try {
 			out.writeObject(p);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void sendChoice(String choice) {
+		try {
+			out.writeObject(new Payload(PayloadType.CHOICE, choice));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -159,21 +165,12 @@ public enum SocketClient {
 		}
 	}
 
-	public void sendChoice(String choice) {
-		try {
-			out.writeObject(new Payload(PayloadType.CHOICE, choice));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
 	/***
 	 * Determine any special logic for different PayloadTypes
 	 * 
 	 * @param p
 	 */
-	private void processPayload(Payload p, String choice) {
+	private void processPayload(Payload p) {
 
 		switch (p.getPayloadType()) {
 		case CONNECT:
@@ -199,9 +196,7 @@ public enum SocketClient {
 			sendRoom(p.getMessage());
 			break;
 		case CHOICE:
-			System.out.println("Got choice " + p.message);
-			messages.add(p.message);
-			break;
+			sendOnMessage(p.getClientName(), p.getMessage());
 		default:
 			log.log(Level.WARNING, "unhandled payload on client" + p);
 			break;
@@ -346,5 +341,12 @@ public enum SocketClient {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public boolean isStillConnected() {
+		if (server == null || !server.isConnected()) {
+			return true;//
+		}
+		return !server.isClosed();
 	}
 }
