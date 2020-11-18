@@ -1,11 +1,12 @@
 package client;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Font;
+import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,12 +15,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.ActionMap;
+import javax.swing.BorderFactory;
 import javax.swing.InputMap;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
 import core.BaseGamePanel;
 
-public class GamePanel extends BaseGamePanel implements Event {
+public class GamePanelNew extends BaseGamePanel implements Event {
 
 	/**
 	 * 
@@ -106,61 +112,83 @@ public class GamePanel extends BaseGamePanel implements Event {
 
 	@Override
 	public void start() {
+		JFrame frame = new JFrame("Rock-Paper-Scissors");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-	}
+		frame.setLayout(new BorderLayout());
+		// create panel
+		JPanel rps = new JPanel();
+		rps.setPreferredSize(new Dimension(400, 400));
+		rps.setLayout(new BorderLayout());
+		// create text area for messages
+		JTextArea textArea = new JTextArea();
+		// don't let the user edit this directly
+		textArea.setEditable(false);
+		textArea.setText("");
+		// create panel to hold multiple controls
+		JPanel attemptsArea = new JPanel();
+		attemptsArea.setLayout(new BorderLayout());
+		// add text area to history/attempts
+		attemptsArea.add(textArea, BorderLayout.CENTER);
+		attemptsArea.setBorder(BorderFactory.createLineBorder(Color.black));
+		// add history/attempts to panel
+		rps.add(attemptsArea, BorderLayout.CENTER);
+		// create panel to hold multiple controls
+		JPanel userInput = new JPanel();
+		JButton rock = new JButton();
+		rock.setText("Rock");
+		rock.setPreferredSize(new Dimension(100, 30));
+		rock.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Interaction.sendChoice("rock");
+			}
+		});
+		// create paper button
+		JButton paper = new JButton();
+		paper.setText("Paper");
+		paper.setPreferredSize(new Dimension(100, 30));
+		paper.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Interaction.sendChoice("paper");
+			}
+		});
+		// create scissors button
+		JButton scissors = new JButton();
+		scissors.setText("Scissors");
+		scissors.setPreferredSize(new Dimension(100, 30));
+		scissors.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Interaction.sendChoice("scissors");
+			}
+		});
 
-	@Override
-	public void update() {
-		applyControls();
-		localMovePlayers();
+		JButton close = new JButton();
+		close.setText("Exit");
+		close.setPreferredSize(new Dimension(90, 20));
+		close.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Interaction.sendChoice("exit");
+			}
+		});
+
+		userInput.add(rock);
+		userInput.add(paper);
+		userInput.add(scissors);
+		// add panel to rps panel
+		rps.add(userInput, BorderLayout.SOUTH);
+		// add rps panel to frame
+		frame.add(rps, BorderLayout.CENTER);
+		frame.pack();
+		frame.setVisible(true);
 	}
 
 	/**
 	 * Gets the current state of input to apply movement to our player
 	 */
-	private void applyControls() {
-		if (myPlayer != null) {
-			int x = 0, y = 0;
-			if (KeyStates.W) {
-				y = -1;
-			}
-			if (KeyStates.S) {
-				y = 1;
-			}
-			if (!KeyStates.W && !KeyStates.S) {
-				y = 0;
-			}
-			if (KeyStates.A) {
-				x = -1;
-			} else if (KeyStates.D) {
-				x = 1;
-			}
-			if (!KeyStates.A && !KeyStates.D) {
-				x = 0;
-			}
-			boolean changed = myPlayer.setDirection(x, y);
-			if (changed) {
-				// only send data if direction changed, otherwise we're creating unnecessary
-				// network traffic
-				System.out.println("Direction changed");
-				SocketClient.INSTANCE.syncDirection(new Point(x, y));
-			}
-		}
-	}
-
-	/**
-	 * This is just an estimate/hint until we receive a position sync from the
-	 * server
-	 */
-	private void localMovePlayers() {
-		Iterator<Player> iter = players.iterator();
-		while (iter.hasNext()) {
-			Player p = iter.next();
-			if (p != null) {
-				p.move();
-			}
-		}
-	}
 
 	@Override
 	public void lateUpdate() {
@@ -171,28 +199,17 @@ public class GamePanel extends BaseGamePanel implements Event {
 
 	@Override
 	public synchronized void draw(Graphics g) {
-		setBackground(Color.BLACK);
-		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		drawPlayers(g);
-		drawText(g);
+
 	}
 
+	@SuppressWarnings("unused")
 	private synchronized void drawPlayers(Graphics g) {
-		Iterator<Player> iter = players.iterator();
-		while (iter.hasNext()) {
-			Player p = iter.next();
-			if (p != null) {
-				p.draw(g);
-			}
-		}
+
 	}
 
+	@SuppressWarnings("unused")
 	private void drawText(Graphics g) {
-		g.setColor(Color.WHITE);
-		g.setFont(new Font("Monospaced", Font.PLAIN, 12));
-		if (myPlayer != null) {
-			g.drawString("Debug MyPlayer: " + myPlayer.toString(), 10, 20);
-		}
+
 	}
 
 	@Override
@@ -257,6 +274,12 @@ public class GamePanel extends BaseGamePanel implements Event {
 
 	@Override
 	public void onGetRoom(String roomName) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void update() {
 		// TODO Auto-generated method stub
 
 	}

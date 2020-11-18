@@ -1,5 +1,6 @@
 package server;
 
+import java.awt.Point;
 import java.io.Serializable;
 
 public class Payload implements Serializable {
@@ -9,13 +10,16 @@ public class Payload implements Serializable {
 	 */
 	private static final long serialVersionUID = -6687715510484845706L;
 
-	// TODO add relevant datatypes, you can share variables based on payloadType
+	private String clientName;
+
+	public Payload() {
+
+	}
+
 	public Payload(PayloadType type, String message) {
 		this.payloadType = type;
 		this.message = message;
 	}
-
-	private String clientName;
 
 	public void setClientName(String s) {
 		this.clientName = s;
@@ -25,7 +29,7 @@ public class Payload implements Serializable {
 		return clientName;
 	}
 
-	public String message;
+	private String message;
 
 	public void setMessage(String s) {
 		this.message = s;
@@ -53,6 +57,18 @@ public class Payload implements Serializable {
 
 	public int getNumber() {
 		return this.number;
+	}
+
+	int x = 0;
+	int y = 0;
+
+	public void setPoint(Point p) {
+		x = p.x;
+		y = p.y;
+	}
+
+	public Point getPoint() {
+		return new Point(x, y);
 	}
 
 	@Override
