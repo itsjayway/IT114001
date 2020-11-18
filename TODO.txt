@@ -1,0 +1,10 @@
+add /creategame <game_ID>
+
+
+add /joingame <game_ID>
+
+add symbol for user list to identify their game (or separate into games)
+
+open new UI?
+
+add timer)
