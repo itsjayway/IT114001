@@ -34,8 +34,9 @@ import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 
 public class ClientUI extends JFrame implements Event {
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	CardLayout card;
@@ -45,10 +46,11 @@ public class ClientUI extends JFrame implements Event {
 	List<User> users = new ArrayList<User>();
 	private final static Logger log = Logger.getLogger(ClientUI.class.getName());
 	Dimension windowSize = Toolkit.getDefaultToolkit().getScreenSize();
-	GamePanelNew game;
+	// GamePanelNew game;
 	String username;
 	RoomsPanel roomsPanel;
 	JMenuBar menu;
+	RPSInput rpsUI;
 
 	public ClientUI(String title) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -65,8 +67,8 @@ public class ClientUI extends JFrame implements Event {
 		});
 		roomsMenu.add(roomsSearch);
 		menu.add(roomsMenu);
-		windowSize.width *= .8;
-		windowSize.height *= .8;
+		windowSize.width *= .6;
+		windowSize.height *= .6;
 		setPreferredSize(windowSize);
 		setSize(windowSize);// This is needed for setLocationRelativeTo()
 		setLocationRelativeTo(null);
@@ -141,7 +143,7 @@ public class ClientUI extends JFrame implements Event {
 					createDrawingPanel();
 					pack();
 					self.setTitle(self.getTitle() + " - " + self.username);
-					game.setPlayerName(self.username);
+					// game.setPlayerName(self.username);
 					SocketClient.INSTANCE.setUsername(self.username);
 
 					self.next();
@@ -208,13 +210,19 @@ public class ClientUI extends JFrame implements Event {
 		textArea.getParent().getParent().getParent().add(scroll, BorderLayout.EAST);
 	}
 
-	void createDrawingPanel() {
-		game = new GamePanelNew();
-		game.setPreferredSize(new Dimension((int) (windowSize.width * .6), windowSize.height));
-		textArea.getParent().getParent().getParent().add(game, BorderLayout.WEST);
+	public void createDrawingPanel() {
+//		game = new GamePanelNew();
+//		game.setPreferredSize(new Dimension((int) (windowSize.width * .6), windowSize.height));
+//		textArea.getParent().getParent().getParent().add(game, BorderLayout.WEST);
+//
+//		// TODO unsubscribe when done
+		rpsUI = new RPSInput();
 
-		// TODO unsubscribe when done
-		SocketClient.INSTANCE.registerCallbackListener(game);
+		// if client opens game
+		// add client to array of players
+		// if
+		rpsUI.show();
+		SocketClient.INSTANCE.registerCallbackListener(rpsUI);
 	}
 
 	void createRoomsPanel() {
@@ -240,11 +248,11 @@ public class ClientUI extends JFrame implements Event {
 		userPanel.repaint();
 	}
 
-	/***
-	 * Attempts to calculate the necessary dimensions for a potentially wrapped
+	/**
+	 * * Attempts to calculate the necessary dimensions for a potentially wrapped
 	 * string of text. This isn't perfect and some extra whitespace above or below
 	 * the text may occur
-	 * 
+	 *
 	 * @param str
 	 * @return
 	 */
@@ -264,6 +272,7 @@ public class ClientUI extends JFrame implements Event {
 
 	void addMessage(String str) {
 		JEditorPane entry = new JEditorPane();
+		entry.setContentType("text/html");
 		entry.setEditable(false);
 		// entry.setLayout(null);
 		entry.setText(str);
@@ -295,6 +304,8 @@ public class ClientUI extends JFrame implements Event {
 			roomsPanel.removeAllRooms();
 			SocketClient.INSTANCE.sendGetRooms(null);
 			break;
+		case "games":
+
 		default:
 			// no need to react
 			break;
@@ -384,5 +395,11 @@ public class ClientUI extends JFrame implements Event {
 			roomsPanel.addRoom(roomName);
 			pack();
 		}
+	}
+
+	@Override
+	public void onChoiceReceive(String clientName, String choice) {
+//		log.log(Level.INFO, String.format("%s: %s", clientName, choice));
+//		self.addMessage(String.format("%s: %s", clientName, choice));
 	}
 }

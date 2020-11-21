@@ -46,22 +46,12 @@ public enum SocketClient {
 		return payload;
 	}
 
-	private void sendPayload(Payload p) {
-		try {
-			out.writeObject(p);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	public void sendChoice(String choice) {
-		try {
-			out.writeObject(new Payload(PayloadType.CHOICE, choice));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	private Payload buildChoice(String choice) {
+		Payload payload = new Payload();
+		payload.setPayloadType(PayloadType.CHOICE);
+		payload.setClientName(clientName);
+		payload.setChoice(choice);
+		return payload;
 	}
 
 	private void listenForServerMessage(ObjectInputStream in) {
@@ -196,6 +186,7 @@ public enum SocketClient {
 			sendRoom(p.getMessage());
 			break;
 		case CHOICE:
+			sendChoice(p.getChoice());
 
 		default:
 			log.log(Level.WARNING, "unhandled payload on client" + p);
@@ -235,6 +226,15 @@ public enum SocketClient {
 		return false;
 	}
 
+	private void sendPayload(Payload p) {
+		try {
+			out.writeObject(p);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	public void setUsername(String username) {
 		clientName = username;
 		sendPayload(buildConnectionStatus(clientName, true));
@@ -242,6 +242,10 @@ public enum SocketClient {
 
 	public void sendMessage(String message) {
 		sendPayload(buildMessage(message));
+	}
+
+	public void sendChoice(String choice) {
+		sendPayload(buildMessage(choice));
 	}
 
 	public void sendCreateRoom(String room) {

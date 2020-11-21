@@ -260,4 +260,10 @@ public class GamePanel extends BaseGamePanel implements Event {
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	public void onChoiceReceive(String clientName, String choice) {
+		// TODO Auto-generated method stub
+
+	}
 }

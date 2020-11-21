@@ -11,6 +11,8 @@ public interface Event {
 
 	void onChangeRoom();
 
+	void onChoiceReceive(String clientName, String choice);
+
 	void onSyncDirection(String clientName, Point direction);
 
 	void onSyncPosition(String clientName, Point position);

@@ -1,15 +1,23 @@
 package server;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JMenuBar;
+import javax.swing.JPanel;
+
+import client.GamePanelNew;
 import client.Player;
+import client.RoomsPanel;
+import client.SocketClient;
 import core.BaseGamePanel;
 
 public class Room extends BaseGamePanel implements AutoCloseable {
@@ -21,6 +29,11 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 	private final static String COMMAND_TRIGGER = "/";
 	private final static String CREATE_ROOM = "createroom";
 	private final static String JOIN_ROOM = "joinroom";
+	private final static String READY = "ready";
+
+	private final static String ROCK = "rock";
+	private final static String PAPER = "paper";
+	private final static String SCISSORS = "scissors";
 	private List<ClientPlayer> clients = new ArrayList<ClientPlayer>();
 	static Dimension gameAreaSize = new Dimension(400, 600);
 
@@ -168,7 +181,7 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 			log.log(Level.INFO, "Closing empty room: " + name);
 			close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 	}
@@ -188,8 +201,17 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 	 * @param client  The sender of the message (since they'll be the ones
 	 *                triggering the actions)
 	 */
-	private boolean processCommands(String message, ServerThread client) {
-		boolean wasCommand = false;
+	protected void createRoom(String room, ServerThread client) {
+		if (server.createNewRoom(room)) {
+			sendMessage(client, "Created a new room");
+			joinRoom(room, client);
+		}
+	}
+
+	String[] gamma = new String[2];
+
+	private String processCommands(String message, ServerThread client) {
+		String response = null;
 		try {
 			if (message.indexOf(COMMAND_TRIGGER) > -1) {
 				String[] comm = message.split(COMMAND_TRIGGER);
@@ -201,25 +223,103 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 					command = command.toLowerCase();
 				}
 				String roomName;
+				ClientPlayer cp = null;
 				switch (command) {
 				case CREATE_ROOM:
 					roomName = comm2[1];
-					if (server.createNewRoom(roomName)) {
-						joinRoom(roomName, client);
-					}
-					wasCommand = true;
+
+					createRoom(roomName, client);
+
+//					if (server.createNewRoom(roomName)) {
+//						joinRoom(roomName, client);
+//					}
 					break;
+
 				case JOIN_ROOM:
 					roomName = comm2[1];
 					joinRoom(roomName, client);
-					wasCommand = true;
 					break;
+				case ROCK:
+					response = message + " submitted a choice.";
+				case PAPER:
+					response = message + " submitted a choice.";
+				case SCISSORS:
+					response = message + " submitted a choice.";
+				case "flip":
+					response = "(╯°□°）╯︵ ┻━┻";
+				case "roll":
+					int dice1 = (int) (Math.random() * 6 + 1);
+					System.out.println("I rolled a " + dice1 + "!");
+					System.out.println(message);
+				case READY:
+					cp = getCP(client);
+					if (cp != null) {
+						cp.player.setReady(true);
+						readyCheck();
+					}
+
+					response = "Ready to go!";
+					break;
+				default:
+					response = message;
+					break;
+
 				}
+			} else {
+				response = message;
 			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return wasCommand;
+		return response;
+	}
+
+	private ClientPlayer getCP(ServerThread client) {
+		Iterator<ClientPlayer> iter = clients.iterator();
+		while (iter.hasNext()) {
+			ClientPlayer cp = iter.next();
+			if (cp.client == client) {
+				return cp;
+			}
+		}
+		return null;
+	}
+
+	private void readyCheck() {
+		Iterator<ClientPlayer> iter = clients.iterator();
+		int total = clients.size();
+		int ready = 0;
+		while (iter.hasNext()) {
+			ClientPlayer cp = iter.next();
+			if (cp != null && cp.player.isReady()) {
+				ready++;
+
+			}
+		}
+		if (ready == 1) {
+
+		}
+		if (ready >= total) {
+			// start
+			System.out.println("Got two inputs! Time to process...");
+
+		}
+	}
+
+	JPanel textArea;
+	Dimension windowSize = Toolkit.getDefaultToolkit().getScreenSize();
+	GamePanelNew game;
+	String username;
+	RoomsPanel roomsPanel;
+	JMenuBar menu;
+
+	public void createDrawingPanel() {
+		game = new GamePanelNew();
+		game.setPreferredSize(new Dimension((int) (windowSize.width * .6), windowSize.height));
+		textArea.getParent().getParent().getParent().add(game, BorderLayout.WEST);
+
+		SocketClient.INSTANCE.registerCallbackListener(game);
 	}
 
 	protected void sendConnectionStatus(ServerThread client, boolean isConnect, String message) {
@@ -244,10 +344,11 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 	 */
 	protected void sendMessage(ServerThread sender, String message) {
 		log.log(Level.INFO, getName() + ": Sending message to " + clients.size() + " clients");
-		if (processCommands(message, sender)) {
-			// it was a command, don't broadcast
+		String resp = processCommands(message, sender);
+		if (resp == null) {
 			return;
 		}
+		message = resp;
 		Iterator<ClientPlayer> iter = clients.iterator();
 		while (iter.hasNext()) {
 			ClientPlayer client = iter.next();
@@ -345,13 +446,12 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 
 	@Override
 	public void awake() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void start() {
-		// TODO Auto-generated method stub
+
 		log.log(Level.INFO, getName() + " start called");
 	}
 

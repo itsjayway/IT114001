@@ -1,7 +1,6 @@
 package client;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -15,10 +14,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.ActionMap;
-import javax.swing.BorderFactory;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
@@ -110,11 +109,9 @@ public class GamePanelNew extends BaseGamePanel implements Event {
 		players = new ArrayList<Player>();
 	}
 
-	@Override
 	public void start() {
-		JFrame frame = new JFrame("Rock-Paper-Scissors");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		JFrame frame = new JFrame("RPS");
+		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
 		// create panel
 		JPanel rps = new JPanel();
@@ -126,14 +123,14 @@ public class GamePanelNew extends BaseGamePanel implements Event {
 		textArea.setEditable(false);
 		textArea.setText("");
 		// create panel to hold multiple controls
-		JPanel attemptsArea = new JPanel();
-		attemptsArea.setLayout(new BorderLayout());
-		// add text area to history/attempts
-		attemptsArea.add(textArea, BorderLayout.CENTER);
-		attemptsArea.setBorder(BorderFactory.createLineBorder(Color.black));
-		// add history/attempts to panel
-		rps.add(attemptsArea, BorderLayout.CENTER);
-		// create panel to hold multiple controls
+//		JPanel attemptsArea = new JPanel();
+//		attemptsArea.setLayout(new BorderLayout());
+//		// add text area to history/attempts
+//		attemptsArea.add(textArea, BorderLayout.CENTER);
+//		attemptsArea.setBorder(BorderFactory.createLineBorder(Color.black));
+//		// add history/attempts to panel
+//		rps.add(attemptsArea, BorderLayout.CENTER);
+//		// create panel to hold multiple controls
 		JPanel userInput = new JPanel();
 		JButton rock = new JButton();
 		rock.setText("Rock");
@@ -141,7 +138,8 @@ public class GamePanelNew extends BaseGamePanel implements Event {
 		rock.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Interaction.sendChoice("rock");
+				JOptionPane.showMessageDialog(frame.getComponent(0), "Rock!");
+				SocketClient.INSTANCE.sendChoice("rock");
 			}
 		});
 		// create paper button
@@ -151,7 +149,8 @@ public class GamePanelNew extends BaseGamePanel implements Event {
 		paper.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Interaction.sendChoice("paper");
+				JOptionPane.showMessageDialog(frame.getComponent(0), "Paper!");
+				SocketClient.INSTANCE.sendChoice("paper");
 			}
 		});
 		// create scissors button
@@ -161,7 +160,8 @@ public class GamePanelNew extends BaseGamePanel implements Event {
 		scissors.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Interaction.sendChoice("scissors");
+				JOptionPane.showMessageDialog(frame.getComponent(0), "Scissors!");
+				SocketClient.INSTANCE.sendChoice("scissors");
 			}
 		});
 
@@ -171,13 +171,14 @@ public class GamePanelNew extends BaseGamePanel implements Event {
 		close.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Interaction.sendChoice("exit");
+				SocketClient.INSTANCE.sendChoice("exit");
 			}
 		});
 
 		userInput.add(rock);
 		userInput.add(paper);
 		userInput.add(scissors);
+		userInput.add(close);
 		// add panel to rps panel
 		rps.add(userInput, BorderLayout.SOUTH);
 		// add rps panel to frame
@@ -280,6 +281,12 @@ public class GamePanelNew extends BaseGamePanel implements Event {
 
 	@Override
 	public void update() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onChoiceReceive(String clientName, String choice) {
 		// TODO Auto-generated method stub
 
 	}
