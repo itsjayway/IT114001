@@ -41,6 +41,7 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 	@SuppressWarnings("unchecked")
 	// <editor-fold defaultstate="collapsed" desc="Generated
 	// <editor-fold defaultstate="collapsed" desc="Generated
+	// <editor-fold defaultstate="collapsed" desc="Generated
 	// Code">//GEN-BEGIN:initComponents
 	private void initComponents() {
 
@@ -49,8 +50,6 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 		button1 = new java.awt.Button();
 		choice1 = new java.awt.Choice();
 		jLabel1 = new javax.swing.JLabel();
-		jScrollPane1 = new javax.swing.JScrollPane();
-		jList1 = new javax.swing.JList<>();
 
 		javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
 		jPanel1.setLayout(jPanel1Layout);
@@ -75,25 +74,6 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 
 		jLabel1.setText("Choice:");
 
-		jList1.setModel(new javax.swing.AbstractListModel<String>() {
-			ArrayList<String> strings = new ArrayList<String>();
-
-			public int getSize() {
-				return strings.size();
-			}
-
-			public String getElementAt(int i) {
-				return strings.get(i);
-			}
-
-			public void addClient(String name) {
-				User u = new User(name);
-				jList1.add(u);
-				pack();
-			}
-		});
-		jScrollPane1.setViewportView(jList1);
-
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
 		layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout
@@ -108,9 +88,7 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 						.addGroup(layout.createSequentialGroup().addGap(91, 91, 91).addComponent(label1,
 								javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
 								javax.swing.GroupLayout.PREFERRED_SIZE)))
-				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-				.addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
-				.addContainerGap()));
+				.addContainerGap(31, Short.MAX_VALUE)));
 		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 				.addGroup(layout.createSequentialGroup().addGap(54, 54, 54)
 						.addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 59,
@@ -120,14 +98,9 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 								.addComponent(choice1, javax.swing.GroupLayout.PREFERRED_SIZE,
 										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 								.addComponent(jLabel1))
-						.addGap(32, 32, 32)
-						.addComponent(button1, javax.swing.GroupLayout.PREFERRED_SIZE, 39,
+						.addGap(32, 32, 32).addComponent(button1, javax.swing.GroupLayout.PREFERRED_SIZE, 39,
 								javax.swing.GroupLayout.PREFERRED_SIZE)
-						.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-				.addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
-						layout.createSequentialGroup().addContainerGap(65, Short.MAX_VALUE).addComponent(jScrollPane1,
-								javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-								.addGap(147, 147, 147)));
+						.addContainerGap(40, Short.MAX_VALUE)));
 
 		pack();
 	}// </editor-fold>//GEN-END:initComponents
@@ -144,8 +117,9 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 	}
 
 	public void button1ActionPerformed(java.awt.event.ActionEvent evt) {
-		System.out.println("/" + choice1.getSelectedItem());
-		SocketClient.INSTANCE.sendChoice("/" + choice1.getSelectedItem());
+
+		// System.out.println("/" + choice1.getSelectedItem());
+		SocketClient.INSTANCE.sendChoice("/" + choice1.getSelectedItem().toLowerCase());
 
 //		System.out.println(choice1.getSelectedItem());
 //		SocketClient.INSTANCE.sendChoice(choice1.getSelectedItem());
@@ -194,9 +168,7 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 	private java.awt.Button button1;
 	private java.awt.Choice choice1;
 	private javax.swing.JLabel jLabel1;
-	private javax.swing.JList<String> jList1;
 	private javax.swing.JPanel jPanel1;
-	private javax.swing.JScrollPane jScrollPane1;
 	private java.awt.Label label1;
 
 	// End of variables declaration//GEN-END:variables
@@ -272,7 +244,6 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 		players = new ArrayList<Player>();
 	}
 
-	@Override
 	public void onChoiceReceive(String clientName, String choice) {
 		// TODO Auto-generated method stub
 
