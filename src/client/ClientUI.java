@@ -397,7 +397,6 @@ public class ClientUI extends JFrame implements Event {
 		}
 	}
 
-	@Override
 	public void onChoiceReceive(String clientName, String choice) {
 //		log.log(Level.INFO, String.format("%s: %s", clientName, choice));
 //		self.addMessage(String.format("%s: %s", clientName, choice));

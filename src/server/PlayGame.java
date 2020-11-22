@@ -1,4 +1,4 @@
-package core;
+package server;
 
 public class PlayGame {
 	final int TIME = 15; // time in seconds for each player to make a decision

@@ -12,11 +12,38 @@ public class Player extends GameObject implements Serializable {
 	/**
 	 * 
 	 */
+
 	private static final long serialVersionUID = -6088251166673414031L;
+	public static String choice;
 	Color color = Color.RED;
 	Point nameOffset = new Point(0, 5);
 
-	boolean isReady = false;
+	boolean isReady;
+	long lastAction = -1L;
+
+	public void setLastAction(Long l) {
+		lastAction = l;
+	}
+
+	public long getTimeBetweenLastAction(Long compare) {
+		return compare - lastAction;
+	}
+
+	public long getLastAction() {
+		return lastAction;
+	}
+
+//	public void toggleChoiced() {
+//		choiced = !choiced;
+//	}
+
+	public void setChoiced(String in) {
+		Player.choice = in;
+	}
+
+	public String getChoiced() {
+		return choice;
+	}
 
 	public void setReady(boolean r) {
 		isReady = r;

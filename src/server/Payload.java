@@ -84,4 +84,5 @@ public class Payload implements Serializable {
 		// TODO Auto-generated method stub
 		return this.choice;
 	}
+
 }

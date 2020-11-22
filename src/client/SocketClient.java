@@ -26,6 +26,7 @@ public enum SocketClient {
 	private static ObjectOutputStream out;
 	private final static Logger log = Logger.getLogger(SocketClient.class.getName());
 	private static List<Event> events = new ArrayList<Event>();// change from event to list<event>
+	private static boolean choiced;
 
 	private Payload buildMessage(String message) {
 		Payload payload = new Payload();
@@ -290,6 +291,10 @@ public enum SocketClient {
 	@Deprecated
 	public void syncPosition() {
 		log.log(Level.SEVERE, "My sample doesn't use this");
+	}
+
+	public void setChoiced(boolean in) {
+		this.choiced = in;
 	}
 
 	public boolean start() throws IOException {

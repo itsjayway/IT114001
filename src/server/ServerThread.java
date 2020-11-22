@@ -20,6 +20,7 @@ public class ServerThread extends Thread {
 	private boolean isRunning = false;
 	private Room currentRoom;// what room we are in, should be lobby by default
 	private String clientName;
+	public String choice;
 	private final static Logger log = Logger.getLogger(ServerThread.class.getName());
 
 	public String getClientName() {

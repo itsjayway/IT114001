@@ -21,6 +21,10 @@ import client.SocketClient;
 import core.BaseGamePanel;
 
 public class Room extends BaseGamePanel implements AutoCloseable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8960110950374519812L;
 	private static SocketServer server;// used to refer to accessible server functions
 	private String name;
 	private final static Logger log = Logger.getLogger(Room.class.getName());
@@ -34,6 +38,10 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 	private final static String ROCK = "rock";
 	private final static String PAPER = "paper";
 	private final static String SCISSORS = "scissors";
+
+//	private final static String FLIP = "flip";
+//	private final static String ROLL = "roll";
+
 	private List<ClientPlayer> clients = new ArrayList<ClientPlayer>();
 	static Dimension gameAreaSize = new Dimension(400, 600);
 
@@ -240,24 +248,29 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 					joinRoom(roomName, client);
 					break;
 				case ROCK:
-					response = message + " submitted a choice.";
+					log.log(Level.SEVERE, "ROCK");
+					client.choice = message.substring(1);
 				case PAPER:
-					response = message + " submitted a choice.";
+					log.log(Level.SEVERE, "PAPER");
+					client.choice = message.substring(0);
+
 				case SCISSORS:
-					response = message + " submitted a choice.";
-				case "flip":
-					response = "(╯°□°）╯︵ ┻━┻";
-				case "roll":
-					int dice1 = (int) (Math.random() * 6 + 1);
-					System.out.println("I rolled a " + dice1 + "!");
-					System.out.println(message);
+					log.log(Level.SEVERE, "SCISSORS");
+					client.choice = message.substring(0);
+//				case FLIP:
+//					response = "(╯°□°）╯︵ ┻━┻";
+//				case ROLL:
+//					int dice1 = (int) (Math.random() * 6 + 1);
+//					System.out.println("I rolled a " + dice1 + "!");
+//					System.out.println(message);
 				case READY:
 					cp = getCP(client);
 					if (cp != null) {
 						cp.player.setReady(true);
 						readyCheck();
-					}
 
+					}
+					// log.log(Level.INFO, cp.player.getName() + ": " + message);
 					response = "Ready to go!";
 					break;
 				default:
@@ -275,6 +288,54 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 		return response;
 	}
 
+	static int ready = 0;
+	static ArrayList<ClientPlayer> cpArr = new ArrayList<ClientPlayer>();
+
+	private void readyCheck() {
+		Iterator<ClientPlayer> iter = clients.iterator();
+		int total = clients.size();
+
+		// int ready = 0;
+
+		// TODO: FIX THIS vvvvv
+
+		while (iter.hasNext()) {
+			ClientPlayer cp = iter.next();
+//			if ((!cpArr.contains(cp))) {
+//				cpArr.add(cp);
+			// if (!cp.choiced) {
+			if (cp != null && cp.player.isReady()) {
+				System.out.println(cp.client.getClientName() + "'s choice: " + cp.client.choice);
+//				if (!cpArr.contains(cp)) { // check if ClientPlayer has already been incremented
+//
+//					ready++;
+//					log.log(Level.INFO, "** results++ " + ready);
+//				} // }
+//			} else {
+//				System.out.println("Updated " + cp.player.getName() + " choice to " + cp.choiced);
+//				// }
+				ready++;
+			}
+
+//			} else {
+			System.out.println("Updated " + cp.player.getName() + " choice to " + cp.client.choice);
+//				return;
+//			}
+
+			if (ready > 1 && ready == cpArr.size()) {
+				// start
+				log.log(Level.SEVERE, "reached target hopefully ");
+				System.out.println("Got two inputs! Time to process...");
+				for (ClientPlayer cpFor : cpArr) {
+					System.out.println("Player: " + cpFor.player.getName() + ", Choice: " + cpFor.choiced);
+				}
+
+				ready = 0;
+
+			}
+		}
+	}
+
 	private ClientPlayer getCP(ServerThread client) {
 		Iterator<ClientPlayer> iter = clients.iterator();
 		while (iter.hasNext()) {
@@ -286,24 +347,15 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 		return null;
 	}
 
-	private void readyCheck() {
+	protected void sendSystemMessage(String message) {
 		Iterator<ClientPlayer> iter = clients.iterator();
-		int total = clients.size();
-		int ready = 0;
 		while (iter.hasNext()) {
-			ClientPlayer cp = iter.next();
-			if (cp != null && cp.player.isReady()) {
-				ready++;
-
+			ClientPlayer client = iter.next();
+			boolean messageSent = client.client.send("[Announcer]", message);
+			if (!messageSent) {
+				iter.remove();
+				log.log(Level.INFO, "Removed client " + client.client.getId());
 			}
-		}
-		if (ready == 1) {
-
-		}
-		if (ready >= total) {
-			// start
-			System.out.println("Got two inputs! Time to process...");
-
 		}
 	}
 
