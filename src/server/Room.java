@@ -295,32 +295,17 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 		Iterator<ClientPlayer> iter = clients.iterator();
 		int total = clients.size();
 
-		// int ready = 0;
-
-		// TODO: FIX THIS vvvvv
-
+		// TODO: Inputs are stored, so map it to Game.java or PlayGame.Gameplay thru
+		// server
 		while (iter.hasNext()) {
 			ClientPlayer cp = iter.next();
-//			if ((!cpArr.contains(cp))) {
-//				cpArr.add(cp);
-			// if (!cp.choiced) {
+
 			if (cp != null && cp.player.isReady()) {
 				System.out.println(cp.client.getClientName() + "'s choice: " + cp.client.choice);
-//				if (!cpArr.contains(cp)) { // check if ClientPlayer has already been incremented
-//
-//					ready++;
-//					log.log(Level.INFO, "** results++ " + ready);
-//				} // }
-//			} else {
-//				System.out.println("Updated " + cp.player.getName() + " choice to " + cp.choiced);
-//				// }
 				ready++;
 			}
 
-//			} else {
 			System.out.println("Updated " + cp.player.getName() + " choice to " + cp.client.choice);
-//				return;
-//			}
 
 			if (ready > 1 && ready == cpArr.size()) {
 				// start
