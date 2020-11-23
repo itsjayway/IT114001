@@ -242,7 +242,11 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 //						joinRoom(roomName, client);
 //					}
 					break;
-
+				case "printarray":
+					for (ClientPlayer e : cpArr) {
+						log.log(Level.INFO, "Player: " + e.player.getName() + " & Choice: " + e.client.choice);
+					}
+					break;
 				case JOIN_ROOM:
 					roomName = comm2[1];
 					joinRoom(roomName, client);
@@ -250,13 +254,15 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 				case ROCK:
 					log.log(Level.SEVERE, "ROCK");
 					client.choice = message.substring(1);
+					break;
 				case PAPER:
 					log.log(Level.SEVERE, "PAPER");
-					client.choice = message.substring(0);
-
+					client.choice = message.substring(1);
+					break;
 				case SCISSORS:
 					log.log(Level.SEVERE, "SCISSORS");
-					client.choice = message.substring(0);
+					client.choice = message.substring(1);
+					break;
 //				case FLIP:
 //					response = "(╯°□°）╯︵ ┻━┻";
 //				case ROLL:
@@ -268,7 +274,6 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 					if (cp != null) {
 						cp.player.setReady(true);
 						readyCheck();
-
 					}
 					// log.log(Level.INFO, cp.player.getName() + ": " + message);
 					response = "Ready to go!";
@@ -290,6 +295,7 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 
 	static int ready = 0;
 	static ArrayList<ClientPlayer> cpArr = new ArrayList<ClientPlayer>();
+	public static String prevWinner;
 
 	private void readyCheck() {
 		Iterator<ClientPlayer> iter = clients.iterator();
@@ -300,25 +306,45 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 		while (iter.hasNext()) {
 			ClientPlayer cp = iter.next();
 
-			if (cp != null && cp.player.isReady()) {
+			if (cp.client.choice != null && cp != null && cp.player.isReady()) {
 				System.out.println(cp.client.getClientName() + "'s choice: " + cp.client.choice);
+
 				ready++;
+			} else if (cp.client.choice == null) {
+
 			}
 
 			System.out.println("Updated " + cp.player.getName() + " choice to " + cp.client.choice);
-
+			log.log(Level.INFO, "ready var: " + ready);
 			if (ready > 1 && ready == cpArr.size()) {
 				// start
 				log.log(Level.SEVERE, "reached target hopefully ");
 				System.out.println("Got two inputs! Time to process...");
-				for (ClientPlayer cpFor : cpArr) {
-					System.out.println("Player: " + cpFor.player.getName() + ", Choice: " + cpFor.choiced);
+				int winner = PlayGame.Gameplay(cpArr);
+				if (winner == 0) {
+					System.out.println("TIE");
 				}
 
+				String winnerMessage = cpArr.get(winner - 1).player.getName() + " is the winner!";
+				prevWinner = cpArr.get(winner - 1).player.getName();
+				sendSystemMessage(winnerMessage);
+//				for (ClientPlayer cpFor : cpArr) {
+//					System.out.println("Player: " + cpFor.player.getName() + ", Choice: " + cpFor.choiced);
+//				}
+				// log.log(Level.INFO, "The following is from cpArr: ");
+//				for (ClientPlayer c : cpArr) {
+//					System.out.println("client: " + c.player.getName() + ", choice: " + c.client.choice);
+//				}
 				ready = 0;
-
+				cpArr.clear();
+				log.log(Level.INFO, "ready -> 0, cpArr cleared...");
+			}
+			if (!(cpArr.contains(cp))) {
+				cpArr.add(cp);
+				System.out.println(cp.player.getName() + " added to cpArr");
 			}
 		}
+
 	}
 
 	private ClientPlayer getCP(ServerThread client) {
