@@ -315,7 +315,7 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 			}
 
 			System.out.println("Updated " + cp.player.getName() + " choice to " + cp.client.choice);
-
+			log.log(Level.INFO, "ready var: " + ready);
 			if (ready > 1 && ready == cpArr.size()) {
 				// start
 				log.log(Level.SEVERE, "reached target hopefully ");
