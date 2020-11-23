@@ -8,7 +8,6 @@ package client;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -24,7 +23,8 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 	Player myPlayer;
 	String playerUsername;// caching it so we don't lose it when room is wiped
 	List<Player> gameplayers;
-	private final static Logger log = Logger.getLogger(GamePanel.class.getName());
+	// private final static Logger log =
+	// Logger.getLogger(GamePanel.class.getName());
 
 	/**
 	 * Creates new form RPSInput
@@ -198,7 +198,7 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 	private java.awt.Choice choice1;
 	private javax.swing.JLabel jLabel1;
 	private javax.swing.JPanel jPanel1;
-	private javax.swing.JTextArea lastWinner;
+	// private javax.swing.JTextArea lastWinner;
 	private java.awt.Label label1;
 	private javax.swing.JButton readyButton;
 
