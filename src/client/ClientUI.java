@@ -2,6 +2,7 @@ package client;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
@@ -53,6 +54,7 @@ public class ClientUI extends JFrame implements Event {
 	RPSInput rpsUI;
 
 	public ClientUI(String title) {
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		menu = new JMenuBar();
 		JMenu roomsMenu = new JMenu("Rooms");
@@ -69,13 +71,13 @@ public class ClientUI extends JFrame implements Event {
 		menu.add(roomsMenu);
 		windowSize.width *= .6;
 		windowSize.height *= .6;
-		setPreferredSize(windowSize);
-		setSize(windowSize);// This is needed for setLocationRelativeTo()
+		setPreferredSize(new Dimension(600, 600));
+		setSize(new Dimension(600, 405));// This is needed for setLocationRelativeTo()
 		setLocationRelativeTo(null);
 		self = this;
 		setTitle(title);
 		card = new CardLayout();
-		setLayout(card);
+		getContentPane().setLayout(card);
 		createConnectionScreen();
 		createUserInputScreen();
 
@@ -99,6 +101,10 @@ public class ClientUI extends JFrame implements Event {
 		panel.add(portLabel);
 		panel.add(port);
 		JButton button = new JButton("Next");
+
+		// JTextField text = new JTextField();
+		// input.add(text);
+
 		button.addActionListener(new ActionListener() {
 
 			@Override
@@ -119,7 +125,7 @@ public class ClientUI extends JFrame implements Event {
 
 		});
 		panel.add(button);
-		this.add(panel, "login");
+		getContentPane().add(panel, "login");
 	}
 
 	void createUserInputScreen() {
@@ -152,7 +158,7 @@ public class ClientUI extends JFrame implements Event {
 
 		});
 		panel.add(button);
-		this.add(panel, "details");
+		getContentPane().add(panel, "details");
 	}
 
 	void createPanelRoom() {
@@ -169,6 +175,21 @@ public class ClientUI extends JFrame implements Event {
 
 		JPanel input = new JPanel();
 		input.setLayout(new BoxLayout(input, BoxLayout.X_AXIS));
+
+		JButton btnNewButton = new JButton("Open Game");
+		btnNewButton.setBackground(Color.PINK);
+		input.add(btnNewButton);
+
+		btnNewButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				rpsUI = new RPSInput();
+				rpsUI.show();
+
+			}
+		});
 		JTextField text = new JTextField();
 		input.add(text);
 		JButton button = new JButton("Send");
@@ -192,7 +213,7 @@ public class ClientUI extends JFrame implements Event {
 		});
 		input.add(button);
 		panel.add(input, BorderLayout.SOUTH);
-		this.add(panel, "lobby");
+		getContentPane().add(panel, "lobby");
 	}
 
 	void createPanelUserList() {
@@ -227,7 +248,7 @@ public class ClientUI extends JFrame implements Event {
 
 	void createRoomsPanel() {
 		roomsPanel = new RoomsPanel(this);
-		this.add(roomsPanel, "rooms");
+		getContentPane().add(roomsPanel, "rooms");
 	}
 
 	void addClient(String name) {

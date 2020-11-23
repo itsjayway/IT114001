@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+
 /**
  *
  * @author jibra
@@ -42,7 +46,10 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 	// <editor-fold defaultstate="collapsed" desc="Generated
 	// <editor-fold defaultstate="collapsed" desc="Generated
 	// <editor-fold defaultstate="collapsed" desc="Generated
+	// <editor-fold defaultstate="collapsed" desc="Generated
+	// <editor-fold defaultstate="collapsed" desc="Generated
 	// Code">//GEN-BEGIN:initComponents
+
 	private void initComponents() {
 
 		jPanel1 = new javax.swing.JPanel();
@@ -50,6 +57,9 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 		button1 = new java.awt.Button();
 		choice1 = new java.awt.Choice();
 		jLabel1 = new javax.swing.JLabel();
+		readyButton = new javax.swing.JButton();
+//		lastWinner = new javax.swing.JTextArea();
+//		lastWinner.setEditable(false);
 
 		javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
 		jPanel1.setLayout(jPanel1Layout);
@@ -58,9 +68,10 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 		jPanel1Layout.setVerticalGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 				.addGap(0, 345, Short.MAX_VALUE));
 
-		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
 		label1.setAlignment(java.awt.Label.CENTER);
+		label1.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
 		label1.setText("Rock, Paper, Scissors...");
 
 		button1.setLabel("Submit");
@@ -74,36 +85,54 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 
 		jLabel1.setText("Choice:");
 
+		readyButton.setText("Shoot! (Ready up)");
+		readyButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				readyButtonActionPerformed(evt);
+			}
+		});
+
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+		layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
+				.addGroup(layout.createSequentialGroup()
+						.addGroup(layout.createParallelGroup(Alignment.LEADING)
+								.addGroup(layout.createSequentialGroup().addGap(103).addComponent(button1,
+										GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE))
+								.addGroup(layout.createSequentialGroup().addGap(18).addComponent(jLabel1)
+										.addPreferredGap(ComponentPlacement.RELATED)
+										.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
+												.addComponent(label1, GroupLayout.DEFAULT_SIZE,
+														GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+												.addComponent(choice1, GroupLayout.DEFAULT_SIZE, 197,
+														Short.MAX_VALUE))))
+						.addPreferredGap(ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+						.addComponent(readyButton, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
+						.addGap(43)));
+		layout.setVerticalGroup(layout.createParallelGroup(Alignment.LEADING)
+				.addGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup(Alignment.LEADING)
+						.addGroup(layout.createSequentialGroup().addGap(97)
+								.addComponent(label1, GroupLayout.PREFERRED_SIZE, 59, GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(ComponentPlacement.RELATED)
+								.addGroup(layout.createParallelGroup(Alignment.TRAILING)
+										.addComponent(choice1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+												GroupLayout.PREFERRED_SIZE)
+										.addComponent(jLabel1))
+								.addGap(32)
+								.addComponent(button1, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE))
+						.addGroup(layout.createSequentialGroup().addGap(64).addComponent(readyButton,
+								GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)))
+						.addContainerGap(10, Short.MAX_VALUE)));
 		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout
-				.createSequentialGroup()
-				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-						.addGroup(layout.createSequentialGroup().addGap(103, 103, 103).addComponent(button1,
-								javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
-						.addGroup(layout.createSequentialGroup().addGap(18, 18, 18).addComponent(jLabel1)
-								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(choice1, javax.swing.GroupLayout.PREFERRED_SIZE, 197,
-										javax.swing.GroupLayout.PREFERRED_SIZE))
-						.addGroup(layout.createSequentialGroup().addGap(91, 91, 91).addComponent(label1,
-								javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
-								javax.swing.GroupLayout.PREFERRED_SIZE)))
-				.addContainerGap(31, Short.MAX_VALUE)));
-		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(layout.createSequentialGroup().addGap(54, 54, 54)
-						.addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 59,
-								javax.swing.GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-								.addComponent(choice1, javax.swing.GroupLayout.PREFERRED_SIZE,
-										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-								.addComponent(jLabel1))
-						.addGap(32, 32, 32).addComponent(button1, javax.swing.GroupLayout.PREFERRED_SIZE, 39,
-								javax.swing.GroupLayout.PREFERRED_SIZE)
-						.addContainerGap(40, Short.MAX_VALUE)));
 
 		pack();
 	}// </editor-fold>//GEN-END:initComponents
+
+	private void readyButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_readyButtonActionPerformed
+		// TODO add your handling code here:
+		SocketClient.INSTANCE.sendChoice("/ready");
+		dispose();
+
+	}// GEN-LAST:event_readyButtonActionPerformed
 
 	public int getChoice() {
 		int choice = 2;
@@ -120,7 +149,7 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 
 		// System.out.println("/" + choice1.getSelectedItem());
 		SocketClient.INSTANCE.sendChoice("/" + choice1.getSelectedItem().toLowerCase());
-
+		readyButton.setVisible(true);
 //		System.out.println(choice1.getSelectedItem());
 //		SocketClient.INSTANCE.sendChoice(choice1.getSelectedItem());
 
@@ -169,7 +198,9 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 	private java.awt.Choice choice1;
 	private javax.swing.JLabel jLabel1;
 	private javax.swing.JPanel jPanel1;
+	private javax.swing.JTextArea lastWinner;
 	private java.awt.Label label1;
+	private javax.swing.JButton readyButton;
 
 	// End of variables declaration//GEN-END:variables
 	@Override

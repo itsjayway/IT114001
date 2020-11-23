@@ -5,6 +5,7 @@ import java.util.Scanner;
 import server.PlayGame;
 
 public class Game {
+//EXAMPLE	
 	public static void main(String[] args) {
 		boolean playing = true;
 		Scanner in = new Scanner(System.in);
@@ -12,7 +13,6 @@ public class Game {
 //		UI.setVisible(true);
 
 		while (playing) {
-
 			System.out.println("-1: rock, 0: paper, 1: scissors");
 			System.out.println("player 1 input: ");
 			int player1 = in.nextInt();
