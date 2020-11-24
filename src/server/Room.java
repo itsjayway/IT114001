@@ -39,8 +39,8 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 	private final static String PAPER = "paper";
 	private final static String SCISSORS = "scissors";
 
-//	private final static String FLIP = "flip";
-//	private final static String ROLL = "roll";
+	private final static String FLIP = "flip";
+	private final static String ROLL = "roll";
 
 	private List<ClientPlayer> clients = new ArrayList<ClientPlayer>();
 	static Dimension gameAreaSize = new Dimension(400, 600);
@@ -217,9 +217,11 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 	}
 
 	String[] gamma = new String[2];
+	static String response = null;
 
 	private String processCommands(String message, ServerThread client) {
-		String response = null;
+		// String response = null;
+		response = null;
 		try {
 			if (message.indexOf(COMMAND_TRIGGER) > -1) {
 				String[] comm = message.split(COMMAND_TRIGGER);
@@ -263,12 +265,13 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 					log.log(Level.SEVERE, "SCISSORS");
 					client.choice = message.substring(1);
 					break;
-//				case FLIP:
-//					response = "(╯°□°）╯︵ ┻━┻";
-//				case ROLL:
-//					int dice1 = (int) (Math.random() * 6 + 1);
-//					System.out.println("I rolled a " + dice1 + "!");
-//					System.out.println(message);
+				case FLIP:
+					response = "(╯°□°）╯︵ ┻━┻";
+					break;
+				case ROLL:
+					int dice1 = (int) (Math.random() * 6 + 1);
+					response = "I rolled a " + dice1 + "!";
+					break;
 				case READY:
 					cp = getCP(client);
 					if (cp != null) {
@@ -276,7 +279,7 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 						readyCheck();
 					}
 					// log.log(Level.INFO, cp.player.getName() + ": " + message);
-					response = "Ready to go!";
+					// response = "Ready to go!";
 					break;
 				default:
 					response = message;
@@ -308,6 +311,8 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 
 			if (cp.client.choice != null && cp != null && cp.player.isReady()) {
 				System.out.println(cp.client.getClientName() + "'s choice: " + cp.client.choice);
+
+				sendSystemMessage(cp.client.getClientName() + " ready'd up!");
 
 				ready++;
 			} else if (cp.client.choice == null) {
