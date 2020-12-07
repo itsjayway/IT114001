@@ -34,6 +34,8 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 
+import core.Countdown;
+
 public class ClientUI extends JFrame implements Event {
 
 	/**
@@ -421,5 +423,18 @@ public class ClientUI extends JFrame implements Event {
 	public void onChoiceReceive(String clientName, String choice) {
 //		log.log(Level.INFO, String.format("%s: %s", clientName, choice));
 //		self.addMessage(String.format("%s: %s", clientName, choice));
+	}
+
+	Countdown timer;
+
+	public void onSetCountdown(String message, int duration) {
+		// TODO Auto-generated method stub
+		if (timer != null) {
+			timer.cancel();
+		}
+		timer = new Countdown(message, duration, (x) -> {
+			System.out.println("expired");
+			System.out.println(x);
+		});
 	}
 }

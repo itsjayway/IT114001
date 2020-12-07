@@ -304,8 +304,11 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 		Iterator<ClientPlayer> iter = clients.iterator();
 		int total = clients.size();
 
-		// TODO: Inputs are stored, so map it to Game.java or PlayGame.Gameplay thru
-		// server
+		// TODO: /join
+		// shows the opengame button
+		// TODO: change cpArr to increment when players are 'joined'
+		//
+
 		while (iter.hasNext()) {
 			ClientPlayer cp = iter.next();
 
@@ -510,6 +513,17 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 		name = null;
 		isRunning = false;
 		// should be eligible for garbage collection now
+	}
+
+	protected void sendCountdown(String message, int duration) {
+		Iterator<ClientPlayer> iter = clients.iterator();
+		while (iter.hasNext()) {
+			ClientPlayer client = iter.next();
+			boolean messageSent = client.client.sendCountdown(message, duration);
+			if (!messageSent) {
+				iter.remove();
+			}
+		}
 	}
 
 	@Override
