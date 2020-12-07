@@ -23,6 +23,7 @@ import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
 import core.BaseGamePanel;
+import core.Countdown;
 
 public class GamePanelNew extends BaseGamePanel implements Event {
 
@@ -41,6 +42,19 @@ public class GamePanelNew extends BaseGamePanel implements Event {
 		if (myPlayer != null) {
 			myPlayer.setName(playerUsername);
 		}
+	}
+
+	Countdown timer;
+
+	public void onSetCountdown(String message, int duration) {
+		// TODO Auto-generated method stub
+		if (timer != null) {
+			timer.cancel();
+		}
+		timer = new Countdown(message, duration, (x) -> {
+			System.out.println("expired");
+			System.out.println(x);
+		});
 	}
 
 	@Override

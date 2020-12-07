@@ -259,4 +259,12 @@ public class ServerThread extends Thread {
 			}
 		}
 	}
+
+	protected boolean sendCountdown(String message, int duration) {
+		Payload payload = new Payload();
+		payload.setPayloadType(PayloadType.SET_COUNTDOWN);
+		payload.setMessage(message);
+		payload.setNumber(duration);
+		return sendPayload(payload);
+	}
 }

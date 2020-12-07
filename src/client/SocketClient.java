@@ -188,7 +188,10 @@ public enum SocketClient {
 			break;
 		case CHOICE:
 			sendChoice(p.getChoice());
-
+			break;
+		case SET_COUNTDOWN:
+			sendCountdown(p.getMessage(), p.getNumber());
+			break;
 		default:
 			log.log(Level.WARNING, "unhandled payload on client" + p);
 			break;
@@ -196,6 +199,15 @@ public enum SocketClient {
 		}
 	}
 
+	private void sendCountdown(String message, int duration) {
+		Iterator<Event> iter = events.iterator();
+		while (iter.hasNext()) {
+			Event e = iter.next();
+			if (e != null) {
+				e.onSetCountdown(message, duration);
+			}
+		}
+	}
 	// TODO Start public methods here
 
 	public void registerCallbackListener(Event e) {
