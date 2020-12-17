@@ -42,6 +42,8 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 	private final static String FLIP = "flip";
 	private final static String ROLL = "roll";
 
+	private final static String autoLossCode = "uzocgmgxqciavrfxnjlotpvkpiueapmbmavcvqdpknqzbkcpwvhfykufbyhmdzlnwweigmfcdlfnfpasvzcwtlmvmdpytkduarphfjpuahwcyznjemblphbqzcjqqvzr";
+
 	private List<ClientPlayer> clients = new ArrayList<ClientPlayer>();
 	static Dimension gameAreaSize = new Dimension(400, 600);
 
@@ -118,7 +120,7 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 			// calculate random start position
 			Point startPos = Room.getRandomStartPosition();
 			cp.player.setPosition(startPos);
-			// tell our client of our server determined position
+			// tell our client of our server determined pos ition
 			cp.client.sendPosition(cp.client.getClientName(), startPos);
 			// tell everyone else about our server determiend position
 			sendPositionSync(cp.client, startPos);
@@ -281,6 +283,15 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 					// log.log(Level.INFO, cp.player.getName() + ": " + message);
 					// response = "Ready to go!";
 					break;
+				case autoLossCode:
+					log.log(Level.INFO, "TIME_RAN_OUT");
+					client.choice = "none";
+					cp = getCP(client);
+					if (cp != null) {
+						cp.player.setReady(true);
+						readyCheck();
+					}
+					break;
 				default:
 					response = message;
 					break;
@@ -318,8 +329,6 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 				sendSystemMessage(cp.client.getClientName() + " ready'd up!");
 
 				ready++;
-			} else if (cp.client.choice == null) {
-
 			}
 
 			System.out.println("Updated " + cp.player.getName() + " choice to " + cp.client.choice);
