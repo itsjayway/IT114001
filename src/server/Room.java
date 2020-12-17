@@ -38,9 +38,7 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 	private final static String ROCK = "rock";
 	private final static String PAPER = "paper";
 	private final static String SCISSORS = "scissors";
-
-//	private final static String FLIP = "flip";
-//	private final static String ROLL = "roll";
+	private final static String autoLossCode = "uzocgmgxqciavrfxnjlotpvkpiueapmbmavcvqdpknqzbkcpwvhfykufbyhmdzlnwweigmfcdlfnfpasvzcwtlmvmdpytkduarphfjpuahwcyznjemblphbqzcjqqvzr";
 
 	private List<ClientPlayer> clients = new ArrayList<ClientPlayer>();
 	static Dimension gameAreaSize = new Dimension(400, 600);
@@ -53,7 +51,6 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 
 	public Room(String name) {
 		this.name = name;
-		// set this for BaseGamePanel to NOT draw since it's server-side
 		isServer = true;
 	}
 
@@ -221,7 +218,7 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 	private String processCommands(String message, ServerThread client) {
 		String response = null;
 		try {
-			if (message.indexOf(COMMAND_TRIGGER) > -1) {
+			if (message.indexOf(COMMAND_TRIGGER) > -1) { // parse chat-based commands
 				String[] comm = message.split(COMMAND_TRIGGER);
 				log.log(Level.INFO, message);
 				String part1 = comm[1];
@@ -235,28 +232,23 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 				switch (command) {
 				case CREATE_ROOM:
 					roomName = comm2[1];
-
 					createRoom(roomName, client);
-
-//					if (server.createNewRoom(roomName)) {
-//						joinRoom(roomName, client);
-//					}
 					break;
 				case "printarray":
 					for (ClientPlayer e : cpArr) {
 						log.log(Level.INFO, "Player: " + e.player.getName() + " & Choice: " + e.client.choice);
 					}
 					break;
-				case JOIN_ROOM:
+				case JOIN_ROOM: // /joinroom
 					roomName = comm2[1];
 					joinRoom(roomName, client);
 					break;
-				case ROCK:
+				case ROCK: //
 					log.log(Level.SEVERE, "ROCK");
 					client.choice = message.substring(1);
 					break;
 				case PAPER:
-					log.log(Level.SEVERE, "PAPER");
+					log.log(Level.SEVERE, "PAPER"); // RPS cases come from RPSInput line 117
 					client.choice = message.substring(1);
 					break;
 				case SCISSORS:
@@ -269,6 +261,15 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 //					int dice1 = (int) (Math.random() * 6 + 1);
 //					System.out.println("I rolled a " + dice1 + "!");
 //					System.out.println(message);
+				case autoLossCode:
+					log.log(Level.INFO, "TIME_RAN_OUT");
+					client.choice = "none";
+					cp = getCP(client);
+					if (cp != null) {
+						cp.player.setReady(true);
+						readyCheck();
+					}
+					break;
 				case READY:
 					// TODO: add check to see if more than one player in room
 					if (clients.size() > 1) {
@@ -279,7 +280,6 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 							cp.player.setReady(true);
 							readyCheck();
 						}
-						// log.log(Level.INFO, cp.player.getName() + ": " + message);
 						response = "Ready to go!";
 					} else {
 						sendSystemMessage("Waiting for more players...");
@@ -320,16 +320,12 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 			} else if (cp.client.choice == null) {
 
 			}
-
-			System.out.println("Updated " + cp.player.getName() + " choice to " + cp.client.choice);
 			log.log(Level.INFO, "ready var: " + ready);
-			log.log(Level.INFO, "cpArr contents: ");
-			for (ClientPlayer cp2 : cpArr) {
-				System.out.print(cp2.player.getName() + ", ");
-			}
+
 			if (ready > 1 && ready == cpArr.size()) {
-				// start
-				log.log(Level.SEVERE, "reached target hopefully ");
+
+				// *THE JUICE* //
+
 				System.out.println("Got two inputs! Time to process...");
 				int winner = PlayGame.Gameplay(cpArr);
 				if (winner == 0) {
@@ -340,16 +336,26 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 				prevWinner = cpArr.get(winner - 1).player.getName();
 				sendSystemMessage(winnerMessage);
 
-				//
-
-				ready = 0;
+				ready = 0; // reset condition checking to allow repeating
 				cpArr.clear();
 				log.log(Level.INFO, "ready -> 0, cpArr cleared...");
 			}
-			if (!(cpArr.contains(cp))) {
+
+			if (!(cpArr.contains(cp))) { // attempt at forming an array separate from that of Room.clients
 				cpArr.add(cp);
 				System.out.println(cp.player.getName() + " added to cpArr");
 			}
+
+			/*
+			 * attempt at creating a "chain" of games:
+			 *
+			 * try for(int curr = 0; i < cpArr.size(); i++)
+			 * Playgame.Gameplay(cpArr.get(curr).client.choice,
+			 * cpArr.get(curr+1).client.choice)
+			 * 
+			 * catch IndexOutOfBounds Exception
+			 * 
+			 */
 		}
 	}
 
