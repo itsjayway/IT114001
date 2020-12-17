@@ -39,10 +39,8 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 	private final static String PAPER = "paper";
 	private final static String SCISSORS = "scissors";
 
-	private final static String FLIP = "flip";
-	private final static String ROLL = "roll";
-
-	private final static String autoLossCode = "uzocgmgxqciavrfxnjlotpvkpiueapmbmavcvqdpknqzbkcpwvhfykufbyhmdzlnwweigmfcdlfnfpasvzcwtlmvmdpytkduarphfjpuahwcyznjemblphbqzcjqqvzr";
+//	private final static String FLIP = "flip";
+//	private final static String ROLL = "roll";
 
 	private List<ClientPlayer> clients = new ArrayList<ClientPlayer>();
 	static Dimension gameAreaSize = new Dimension(400, 600);
@@ -219,11 +217,9 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 	}
 
 	String[] gamma = new String[2];
-	static String response = null;
 
 	private String processCommands(String message, ServerThread client) {
-		// String response = null;
-		response = null;
+		String response = null;
 		try {
 			if (message.indexOf(COMMAND_TRIGGER) > -1) {
 				String[] comm = message.split(COMMAND_TRIGGER);
@@ -267,29 +263,26 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 					log.log(Level.SEVERE, "SCISSORS");
 					client.choice = message.substring(1);
 					break;
-				case FLIP:
-					response = "(╯°□°）╯︵ ┻━┻";
-					break;
-				case ROLL:
-					int dice1 = (int) (Math.random() * 6 + 1);
-					response = "I rolled a " + dice1 + "!";
-					break;
+//				case FLIP:
+//					response = "(╯°□°）╯︵ ┻━┻";
+//				case ROLL:
+//					int dice1 = (int) (Math.random() * 6 + 1);
+//					System.out.println("I rolled a " + dice1 + "!");
+//					System.out.println(message);
 				case READY:
-					cp = getCP(client);
-					if (cp != null) {
-						cp.player.setReady(true);
-						readyCheck();
-					}
-					// log.log(Level.INFO, cp.player.getName() + ": " + message);
-					// response = "Ready to go!";
-					break;
-				case autoLossCode:
-					log.log(Level.INFO, "TIME_RAN_OUT");
-					client.choice = "none";
-					cp = getCP(client);
-					if (cp != null) {
-						cp.player.setReady(true);
-						readyCheck();
+					// TODO: add check to see if more than one player in room
+					if (clients.size() > 1) {
+						log.log(Level.INFO, "clients pool size: " + clients.size());
+
+						cp = getCP(client);
+						if (cp != null) {
+							cp.player.setReady(true);
+							readyCheck();
+						}
+						// log.log(Level.INFO, cp.player.getName() + ": " + message);
+						response = "Ready to go!";
+					} else {
+						sendSystemMessage("Waiting for more players...");
 					}
 					break;
 				default:
@@ -315,24 +308,25 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 		Iterator<ClientPlayer> iter = clients.iterator();
 		int total = clients.size();
 
-		// TODO: /join
-		// shows the opengame button
-		// TODO: change cpArr to increment when players are 'joined'
-		//
-
+		// TODO: Inputs are stored, so map it to Game.java or PlayGame.Gameplay thru
+		// server
 		while (iter.hasNext()) {
 			ClientPlayer cp = iter.next();
 
 			if (cp.client.choice != null && cp != null && cp.player.isReady()) {
 				System.out.println(cp.client.getClientName() + "'s choice: " + cp.client.choice);
 
-				sendSystemMessage(cp.client.getClientName() + " ready'd up!");
-
 				ready++;
+			} else if (cp.client.choice == null) {
+
 			}
 
 			System.out.println("Updated " + cp.player.getName() + " choice to " + cp.client.choice);
 			log.log(Level.INFO, "ready var: " + ready);
+			log.log(Level.INFO, "cpArr contents: ");
+			for (ClientPlayer cp2 : cpArr) {
+				System.out.print(cp2.player.getName() + ", ");
+			}
 			if (ready > 1 && ready == cpArr.size()) {
 				// start
 				log.log(Level.SEVERE, "reached target hopefully ");
@@ -345,13 +339,9 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 				String winnerMessage = cpArr.get(winner - 1).player.getName() + " is the winner!";
 				prevWinner = cpArr.get(winner - 1).player.getName();
 				sendSystemMessage(winnerMessage);
-//				for (ClientPlayer cpFor : cpArr) {
-//					System.out.println("Player: " + cpFor.player.getName() + ", Choice: " + cpFor.choiced);
-//				}
-				// log.log(Level.INFO, "The following is from cpArr: ");
-//				for (ClientPlayer c : cpArr) {
-//					System.out.println("client: " + c.player.getName() + ", choice: " + c.client.choice);
-//				}
+
+				//
+
 				ready = 0;
 				cpArr.clear();
 				log.log(Level.INFO, "ready -> 0, cpArr cleared...");
@@ -361,7 +351,6 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 				System.out.println(cp.player.getName() + " added to cpArr");
 			}
 		}
-
 	}
 
 	private ClientPlayer getCP(ServerThread client) {
@@ -522,17 +511,6 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 		name = null;
 		isRunning = false;
 		// should be eligible for garbage collection now
-	}
-
-	protected void sendCountdown(String message, int duration) {
-		Iterator<ClientPlayer> iter = clients.iterator();
-		while (iter.hasNext()) {
-			ClientPlayer client = iter.next();
-			boolean messageSent = client.client.sendCountdown(message, duration);
-			if (!messageSent) {
-				iter.remove();
-			}
-		}
 	}
 
 	@Override

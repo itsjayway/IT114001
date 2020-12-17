@@ -6,18 +6,12 @@
 package client;
 
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JProgressBar;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.Timer;
-
-import core.Countdown;
 
 /**
  *
@@ -29,13 +23,6 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 	Player myPlayer;
 	String playerUsername;// caching it so we don't lose it when room is wiped
 	List<Player> gameplayers;
-	Timer time;
-	static JProgressBar progressBar;
-
-	private final String autoLossCode = "uzocgmgxqciavrfxnjlotpvkpiueapmbmavcvqdpknqzbkcpwvhfykufbyhmdzlnwweigmfcdlfnfpasvzcwtlmvmdpytkduarphfjpuahwcyznjemblphbqzcjqqvzr";
-
-	static final int TIME_IN_SECONDS = 15;
-	static boolean timeRanOut;
 	// private final static Logger log =
 	// Logger.getLogger(GamePanel.class.getName());
 
@@ -49,26 +36,6 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 		choice1.add("Scissors");
 
 	}
-
-//	void CountDownProgressBar(int timeInSecs) {
-//		int timeInMs = timeInSecs * 100;
-//		progressBar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 15);
-//		progressBar.setValue(timeInSecs);
-//		ActionListener listener = new ActionListener() {
-//			int counter = timeInSecs;
-//
-//			public void actionPerformed(ActionEvent ae) {
-//				counter--;
-//				progressBar.setValue(counter);
-//				if (counter < 1) {
-////					JOptionPane.showMessageDialog(null, "Kaboom!");
-//					time.stop();
-//				}
-//			}
-//		};
-//		time = new Timer(timeInMs, listener);
-//		time.start();
-//	}
 
 	/**
 	 * This method is called from within the constructor to initialize the form.
@@ -125,37 +92,6 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 			}
 		});
 
-		// timer implemented as a progress bar
-		// See CountdownProgressBar.java
-
-		int timeInMs = TIME_IN_SECONDS * 100;
-		progressBar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 15);
-		timeRanOut = false;
-		progressBar.setValue(TIME_IN_SECONDS);
-		ActionListener listener = new ActionListener() {
-			int counter = TIME_IN_SECONDS;
-
-			public void actionPerformed(ActionEvent ae) {
-				counter--;
-				progressBar.setValue(counter);
-				if (counter < 1) { // once counter reaches 0 (i.e. 0 seconds)
-					time.stop(); // stop timer
-					timeRanOut = true;
-					SocketClient.INSTANCE.sendChoice(
-							"/uzocgmgxqciavrfxnjlotpvkpiueapmbmavcvqdpknqzbkcpwvhfykufbyhmdzlnwweigmfcdlfnfpasvzcwtlmvmdpytkduarphfjpuahwcyznjemblphbqzcjqqvzr");
-					dispose(); // close window
-
-					// TODO: remove openGame button and
-
-				}
-			}
-		};
-
-		time = new Timer(timeInMs, listener);
-		time.start();
-
-		//
-
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
 		layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
 				.addGroup(layout.createSequentialGroup()
@@ -167,9 +103,8 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 										.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
 												.addComponent(label1, GroupLayout.DEFAULT_SIZE,
 														GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-												.addComponent(choice1, GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
-												.addComponent(progressBar, GroupLayout.DEFAULT_SIZE,
-														GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+												.addComponent(choice1, GroupLayout.DEFAULT_SIZE, 197,
+														Short.MAX_VALUE))))
 						.addPreferredGap(ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
 						.addComponent(readyButton, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
 						.addGap(43)));
@@ -182,10 +117,7 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 										.addComponent(choice1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
 												GroupLayout.PREFERRED_SIZE)
 										.addComponent(jLabel1))
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE)
-								.addGap(16)
+								.addGap(32)
 								.addComponent(button1, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE))
 						.addGroup(layout.createSequentialGroup().addGap(64).addComponent(readyButton,
 								GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)))
@@ -197,7 +129,6 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 
 	private void readyButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_readyButtonActionPerformed
 		// TODO add your handling code here:
-		time.stop();
 		SocketClient.INSTANCE.sendChoice("/ready");
 		dispose();
 
@@ -325,19 +256,6 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 
 	}
 
-	Countdown timer;
-
-	public void onSetCountdown(String message, int duration) {
-		// TODO Auto-generated method stub
-		if (timer != null) {
-			timer.cancel();
-		}
-		timer = new Countdown(message, duration, (x) -> {
-			System.out.println("expired");
-			System.out.println(x);
-		});
-	}
-
 	@Override
 	public void onChangeRoom() {
 //		// don't clear, since we're using iterators to loop, remove via iterator
@@ -393,6 +311,12 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 
 	@Override
 	public void onGetRoom(String roomName) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onSetCountdown(String message, int duration) {
 		// TODO Auto-generated method stub
 
 	}
