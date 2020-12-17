@@ -76,19 +76,12 @@ public class PlayGame {
 	}
 
 	public static int Gameplay(ArrayList<ClientPlayer> in) {
-		if (in.get(0).client.choice == "none") {
-			return 2;
-		} else if (in.get(1).client.choice == "none") {
-			return 1;
-		}
-
 		if (in.get(0).client.choice.toLowerCase().equals("rock")) {
 			if (in.get(1).client.choice.toLowerCase().equals("paper")) // in.get(1) lose
 				return 2;
 			else
 				return 1;
 		}
-
 		if (in.get(0).client.choice.equals("paper")) {
 			if (in.get(1).client.choice.equals("scissors")) // in.get(1) wins
 				return 2;
