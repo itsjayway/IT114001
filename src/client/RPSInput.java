@@ -32,8 +32,6 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 
 	}
 
-<<<<<<< HEAD
-=======
 //	void CountDownProgressBar(int timeInSecs) {
 //		int timeInMs = timeInSecs * 100;
 //		progressBar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 15);
@@ -67,7 +65,6 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 	// <editor-fold defaultstate="collapsed" desc="Generated
 	// Code">//GEN-BEGIN:initComponents
 
->>>>>>> ee599ca47902eea31dcd8ca1963893ff6bb2b173
 	private void initComponents() {
 
 		jPanel1 = new javax.swing.JPanel();
@@ -76,10 +73,6 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 		choice1 = new java.awt.Choice();
 		jLabel1 = new javax.swing.JLabel();
 		readyButton = new javax.swing.JButton();
-<<<<<<< HEAD
-=======
-
->>>>>>> ee599ca47902eea31dcd8ca1963893ff6bb2b173
 
 		javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
 		jPanel1.setLayout(jPanel1Layout);
