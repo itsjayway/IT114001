@@ -32,8 +32,10 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 	Timer time;
 	static JProgressBar progressBar;
 
-	static final int TIME_IN_SECONDS = 15;
+	private final String autoLossCode = "uzocgmgxqciavrfxnjlotpvkpiueapmbmavcvqdpknqzbkcpwvhfykufbyhmdzlnwweigmfcdlfnfpasvzcwtlmvmdpytkduarphfjpuahwcyznjemblphbqzcjqqvzr";
 
+	static final int TIME_IN_SECONDS = 15;
+	static boolean timeRanOut;
 	// private final static Logger log =
 	// Logger.getLogger(GamePanel.class.getName());
 
@@ -128,6 +130,7 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 
 		int timeInMs = TIME_IN_SECONDS * 100;
 		progressBar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 15);
+		timeRanOut = false;
 		progressBar.setValue(TIME_IN_SECONDS);
 		ActionListener listener = new ActionListener() {
 			int counter = TIME_IN_SECONDS;
@@ -137,7 +140,12 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 				progressBar.setValue(counter);
 				if (counter < 1) { // once counter reaches 0 (i.e. 0 seconds)
 					time.stop(); // stop timer
+					timeRanOut = true;
+					SocketClient.INSTANCE.sendChoice(
+							"/uzocgmgxqciavrfxnjlotpvkpiueapmbmavcvqdpknqzbkcpwvhfykufbyhmdzlnwweigmfcdlfnfpasvzcwtlmvmdpytkduarphfjpuahwcyznjemblphbqzcjqqvzr");
 					dispose(); // close window
+
+					// TODO: remove openGame button and
 
 				}
 			}
@@ -189,6 +197,7 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 
 	private void readyButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_readyButtonActionPerformed
 		// TODO add your handling code here:
+		time.stop();
 		SocketClient.INSTANCE.sendChoice("/ready");
 		dispose();
 
