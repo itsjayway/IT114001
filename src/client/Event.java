@@ -18,7 +18,4 @@ public interface Event {
 	void onSyncPosition(String clientName, Point position);
 
 	void onGetRoom(String roomName);
-
-	void onSetCountdown(String message, int duration);
-
 }
