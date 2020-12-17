@@ -115,7 +115,7 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 			// calculate random start position
 			Point startPos = Room.getRandomStartPosition();
 			cp.player.setPosition(startPos);
-			// tell our client of our server determined position
+			// tell our client of our server determined pos ition
 			cp.client.sendPosition(cp.client.getClientName(), startPos);
 			// tell everyone else about our server determiend position
 			sendPositionSync(cp.client, startPos);

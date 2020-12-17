@@ -220,16 +220,17 @@ public class SocketServer {
 		// -> "Arguments" -> type the port in the text box -> Apply
 		int port = -1;
 		try {
-			port = Integer.parseInt(args[0]);
-		} catch (Exception e) {
-			// ignore this, we know it was a parsing issue
+		    port = Integer.parseInt(args[0]);
+		}
+		catch (Exception e) {
+		    // ignore this, we know it was a parsing issue
 		}
 		if (port > -1) {
-			log.log(Level.INFO, "Starting Server");
-			SocketServer server = new SocketServer();
-			log.log(Level.INFO, "Listening on port " + port);
-			server.start(port);
-			log.log(Level.INFO, "Server Stopped");
+		    log.log(Level.INFO, "Starting Server");
+		    SocketServer server = new SocketServer();
+		    log.log(Level.INFO, "Listening on port " + port);
+		    server.start(port);
+		    log.log(Level.INFO, "Server Stopped");
 		}
-	}
+	    }
 }
