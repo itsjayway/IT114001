@@ -20,6 +20,7 @@ public class Player extends GameObject implements Serializable {
 
 	boolean isReady;
 	long lastAction = -1L;
+	public int points = 0;
 
 	public void setLastAction(Long l) {
 		lastAction = l;

@@ -1,6 +1,8 @@
 package client;
 
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,8 +10,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JProgressBar;
 import javax.swing.LayoutStyle.ComponentPlacement;
-
-import core.Countdown;
+import javax.swing.Timer;
 
 public class RPSInput extends javax.swing.JFrame implements Event {
 	private static final long serialVersionUID = -1121202275148798015L;
@@ -17,7 +18,7 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 	Player myPlayer;
 	String playerUsername;
 	List<Player> gameplayers;
-	Countdown time;
+	Timer time;
 	static JProgressBar progressBar;
 	private final String autoLossCode = "uzocgmgxqciavrfxnjlotpvkpiueapmbmavcvqdpknqzbkcpwvhfykufbyhmdzlnwweigmfcdlfnfpasvzcwtlmvmdpytkduarphfjpuahwcyznjemblphbqzcjqqvzr";
 
@@ -109,30 +110,31 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 		// See CountdownProgressBar.java
 		// Timer stopped working... :(
 
-//		int timeInMs = TIME_IN_SECONDS * 100;
-//		progressBar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 15);
-//		timeRanOut = false;
-//		progressBar.setValue(TIME_IN_SECONDS);
-//		ActionListener listener = new ActionListener() {
-//			int counter = TIME_IN_SECONDS;
-//
-//			public void actionPerformed(ActionEvent ae) {
-//				counter--;
-//				progressBar.setValue(counter);
-//				if (counter < 1) { // once counter reaches 0 (i.e. 0 seconds)
-//					time.stop(); // stop timer
-//					timeRanOut = true;
-//					SocketClient.INSTANCE.sendChoice(
-//							"/uzocgmgxqciavrfxnjlotpvkpiueapmbmavcvqdpknqzbkcpwvhfykufbyhmdzlnwweigmfcdlfnfpasvzcwtlmvmdpytkduarphfjpuahwcyznjemblphbqzcjqqvzr");
-//					dispose(); // close window
-//
-//					// TODO: remove openGame button and
-//
-//				}
-//			}
-//		};
-//		time = new Timer(timeInMs, listener);
-//		time.start();
+		int timeInMs = TIME_IN_SECONDS * 100;
+		progressBar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 15);
+		timeRanOut = false;
+		progressBar.setValue(TIME_IN_SECONDS);
+
+		ActionListener listener = new ActionListener() {
+			int counter = TIME_IN_SECONDS;
+
+			public void actionPerformed(ActionEvent ae) {
+				counter--;
+				progressBar.setValue(counter);
+				if (counter < 1) { // once counter reaches 0 (i.e. 0 seconds)
+					time.stop(); // stop timer
+					timeRanOut = true;
+					SocketClient.INSTANCE.sendChoice(
+							"/uzocgmgxqciavrfxnjlotpvkpiueapmbmavcvqdpknqzbkcpwvhfykufbyhmdzlnwweigmfcdlfnfpasvzcwtlmvmdpytkduarphfjpuahwcyznjemblphbqzcjqqvzr");
+					dispose(); // close window
+
+					// TODO: remove openGame button and
+
+				}
+			}
+		};
+		time = new Timer(timeInMs, listener);
+		time.start();
 
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
 		layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
@@ -176,7 +178,13 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 	private void readyButtonActionPerformed(java.awt.event.ActionEvent event) {
 		// time.stop();
 		SocketClient.INSTANCE.sendChoice("/ready");
+		time.stop();
 		dispose();
+	}
+
+	public void buttonSendChoice(java.awt.event.ActionEvent event) {
+		SocketClient.INSTANCE.sendChoice("/" + choice1.getSelectedItem().toLowerCase()); // /rock, /paper, /scissors
+		readyButton.setVisible(true);
 	}
 
 	public int getChoice() {
@@ -188,11 +196,6 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 		if (choice1.getSelectedItem().equals("Scissors"))
 			choice = 1;
 		return choice;
-	}
-
-	public void buttonSendChoice(java.awt.event.ActionEvent event) {
-		SocketClient.INSTANCE.sendChoice("/" + choice1.getSelectedItem().toLowerCase());
-		readyButton.setVisible(true);
 	}
 
 	public static void main(String args[]) {
@@ -278,12 +281,6 @@ public class RPSInput extends javax.swing.JFrame implements Event {
 
 	@Override
 	public void onSetCountdown(String message, int duration) {
-		if (time != null) {
-			time.cancel();
-		}
-		time = new Countdown(message, duration, (x) -> {
-			System.out.println("expired");
-			System.out.println(x);
-		});
+
 	}
 }

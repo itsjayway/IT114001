@@ -253,7 +253,7 @@ public enum SocketClient {
 		sendPayload(buildConnectionStatus(clientName, true));
 	}
 
-	public void sendMessage(String message) {
+	public void sendMessage(String message) { // "welcome to the room!"
 		sendPayload(buildMessage(message));
 	}
 

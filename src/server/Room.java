@@ -285,6 +285,13 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 						sendSystemMessage("Waiting for more players...");
 					}
 					break;
+				case "mypoints":
+					cp = getCP(client);
+					if (cp != null) {
+						response = cp.player.getName() + " won " + cp.player.points + " times!";
+					}
+					break;
+
 				default:
 					response = message;
 					break;
@@ -302,7 +309,7 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 
 	static int ready = 0;
 	static ArrayList<ClientPlayer> cpArr = new ArrayList<ClientPlayer>();
-	public static String prevWinner;
+	public static Player prevWinner;
 
 	private void readyCheck() {
 		Iterator<ClientPlayer> iter = clients.iterator();
@@ -322,18 +329,21 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 			}
 			log.log(Level.INFO, "ready var: " + ready);
 
-			if (ready > 1 && ready == cpArr.size()) {
+			if (ready > 1 && ready >= cpArr.size()) {
 
 				// *THE JUICE* //
 
 				System.out.println("Got two inputs! Time to process...");
-				int winner = PlayGame.Gameplay(cpArr);
+				int winner = PlayGame.Gameplay(cpArr); // 1 for first player, 2 for second player
 				if (winner == 0) {
 					System.out.println("TIE");
 				}
 
 				String winnerMessage = cpArr.get(winner - 1).player.getName() + " is the winner!";
-				prevWinner = cpArr.get(winner - 1).player.getName();
+				prevWinner = cpArr.get(winner - 1).player; // attempt points
+
+				prevWinner.points++; // TODO: add display for points, or points return for command
+
 				sendSystemMessage(winnerMessage);
 
 				ready = 0; // reset condition checking to allow repeating
