@@ -17,7 +17,7 @@ public class Player extends GameObject implements Serializable {
 	public static String choice;
 	Color color = Color.RED;
 	Point nameOffset = new Point(0, 5);
-
+	public static int points = 0;
 	boolean isReady;
 	long lastAction = -1L;
 
