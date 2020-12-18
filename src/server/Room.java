@@ -336,7 +336,9 @@ public class Room extends BaseGamePanel implements AutoCloseable {
 				System.out.println("Got two inputs! Time to process...");
 				int winner = PlayGame.Gameplay(cpArr); // 1 for first player, 2 for second player
 				if (winner == 0) {
+					sendSystemMessage("Tied! :o"); // ties are "safe"
 					System.out.println("TIE");
+					break; // skips points on line 347
 				}
 
 				String winnerMessage = cpArr.get(winner - 1).player.getName() + " is the winner!";
