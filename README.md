@@ -12,11 +12,13 @@ Please see [Issues](https://github.com/jibranabsarulislam/IT114001/issues) for c
 
 ## Screenshots
 
-![myImage](https://imgur.com/uw1EmFi)
-![myImage2](https://imgur.com/5nke9WB)
+[Imgur](https://imgur.com/uw1EmFi)
+[Imgur](https://imgur.com/5nke9WB)
+
 ## Notes
 
 A *little* buggy but I promise I did what I could... o.o
+
 ## License
 
     Copyright [2020] [Jibran Absarulislam]
