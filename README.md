@@ -12,8 +12,8 @@ Please see [Issues](https://github.com/jibranabsarulislam/IT114001/issues?q=is%3
 
 ## Screenshots
 
-[Imgur](https://imgur.com/uw1EmFi)
-[Imgur](https://imgur.com/5nke9WB)
+<img src="https://imgur.com/uw1EmFi.png" width="400">
+<img src="https://imgur.com/5nke9WB.png" width="800">
 
 ## Notes
 
