@@ -8,7 +8,7 @@ Time spent: September - December 2020
 
 ## User Stories
 
-Please see [Issues](https://github.com/jibranabsarulislam/IT114001/issues?q=is%3Aissue+is%3Aclosed) for completed features.
+Please see [Issues](https://github.com/jibranabsarulislam/IT114001/issues?q=is%3Aissue+is%3Aclosed) and [this google doc](https://docs.google.com/document/d/1Qb7yrntoq4ZX_6a22HFRKzUQU5DqcAeSTMbMwsmh3BA/edit?usp=sharing) for completed features.
 
 ## Screenshots
 
